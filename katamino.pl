@@ -26,3 +26,12 @@ tablero(K, T) :-
     fila_vacia(K, F4),
     fila_vacia(K, F5),
     T = [F1, F2, F3, F4, F5].
+
+
+% tamanio(+M, -F, -C) es verdadero cuando M tenga F filas y C columnas. (definido con "ni" porque sino tiene problemas).
+tamanio(M, F, C) :- length(M, F), contarColumnas(M, C).
+
+% contarColumnas(+M,-C) es verdadero cuando todas las filas de M tienen largo C. El caso base asume que nunca se llama al
+% predicado con una lista vacia de antemano.
+contarColumnas([], _). 
+contarColumnas([Mh|Mt],C) :- length(Mh, C), contarColumnas(Mt, C).
