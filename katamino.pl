@@ -35,3 +35,18 @@ tamanio(M, F, C) :- length(M, F), contarColumnas(M, C).
 % predicado con una lista vacia de antemano.
 contarColumnas([], _). 
 contarColumnas([Mh|Mt],C) :- length(Mh, C), contarColumnas(Mt, C).
+
+
+
+% coordenadas(+T, -IJ) debe ser verdadero para todo par IJ que sea una coordenada de elementos del tablero.
+coordenadas(T, (I,J)) :- 
+    tamanio(T, F, C),
+    entre(I, 1, F),
+    entre(J, 1, C).
+
+% entre(?N, +I, +J) es verdadero si N es un numero entre I y J (se pide I menor o igual a J).
+entre(I, I, J) :- I =< J.
+entre(N, I, J) :- 
+    I < J,
+    I1 is I + 1,
+    entre(N, I1, J).
