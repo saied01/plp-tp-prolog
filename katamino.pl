@@ -39,7 +39,8 @@ contarColumnas([Mh|Mt],C) :- length(Mh, C), contarColumnas(Mt, C).
 
 
 % coordenadas(+T, -IJ) debe ser verdadero para todo par IJ que sea una coordenada de elementos del tablero.
-coordenadas(T, (I,J)) :- 
+coordenadas(T, IJ) :-
+    IJ = (I,J),
     tamanio(T, F, C),
     entre(I, 1, F),
     entre(J, 1, C).
@@ -50,3 +51,21 @@ entre(N, I, J) :-
     I < J,
     I1 is I + 1,
     entre(N, I1, J).
+
+
+
+% kPiezas(+K, -PS) debe ser verdadero cuando PS es una lista de longitud K de identificadores de piezas.
+kPiezas(K, PS) :- nombrePiezas(L), elegirK(K, L, PS).
+
+% elegirK(+K, +KL, -PS) elige las piezas desde la lista "nombePiezas". Tiene 3 casos: 
+% Base: si K = 0, la lista que corresponde es la vacia.
+% Elige el K actual: La cabeza de la lista de nombres coincide con la cabeza de la lista de kPiezas, y K disminuye en 1.
+% No elige el K actual: Las cabezas de las listas no coinciden por lo que PS se mantiene y K no disminuye.
+elegirK(0, _, []).
+elegirK(K, [H | KT], [H | PSt]) :- 
+    K > 0, 
+    K1 is K - 1, 
+    elegirK(K1, KT, PSt).
+elegirK(K, [_ | KT], PS) :- 
+    K > 0, 
+    elegirK(K, KT, PS).
