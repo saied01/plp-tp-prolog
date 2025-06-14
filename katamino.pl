@@ -69,3 +69,23 @@ elegirK(K, [H | KT], [H | PSt]) :-
 elegirK(K, [_ | KT], PS) :- 
     K > 0, 
     elegirK(K, KT, PS).
+
+
+%seccionTablero(+T, +ALTO, +ANCHO, +IJ, ?ST)
+seccionTablero(T, ALTO, ANCHO, (I, J), ST) :- Iindex is I-1, Jindex is J-1, 
+                                              sublista(Iindex, ALTO, T, RecorteALTO), 
+                                              recorteDeListas(Jindex, ANCHO, RecorteALTO, ST).
+
+
+recorteDeListas(DESCARTAR, TOMAR, [OriginalHead|[]], [RecortadaHead|[]]) :- 
+    sublista(DESCARTAR, TOMAR, OriginalHead, RecortadaHead).
+
+recorteDeListas(DESCARTAR, TOMAR, [OriginalHead|OriginalTail], [RecortadaHead|RecortadaTail]) :- 
+    sublista(DESCARTAR, TOMAR, OriginalHead, RecortadaHead), 
+    recorteDeListas(DESCARTAR, TOMAR, OriginalTail, RecortadaTail).
+
+
+ubicarPieza(T, LETRA) :- pieza(LETRA, PIEZA), 
+                         tamanio(PIEZA, AltoPieza, AnchoPieza), tamanio(T, AltoT, AnchoT),
+                         between(1, AnchoT, J), between(1, AltoT, I),
+                         seccionTablero(T, AltoPieza, AnchoPieza, (I,J), PIEZA).
