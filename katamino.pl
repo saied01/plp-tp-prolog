@@ -98,3 +98,11 @@ ubicarPiezas(T, P, [Ihead | Itail]) :- ubicarPieza(T, Ihead), ubicarPiezas(T, P,
 
 % poda(+Poda, +Tablero) es verdadero si el tablero satisface la poda.
 poda(sinPoda, _).
+
+
+
+% llenarTablero(+Poda, +Columnas, -Tablero) enumera todas las formas distintas de llenar un tablero con la cantidad de columnas (y piezas) indicada.
+llenarTablero(P, Cols, T) :- 
+    tablero(Cols, T), 
+    kPiezas(Cols, Piezas), 
+    ubicarPiezas(T, P, Piezas).
