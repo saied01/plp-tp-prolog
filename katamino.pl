@@ -89,3 +89,12 @@ ubicarPieza(T, LETRA) :- pieza(LETRA, PIEZA),
                          tamanio(PIEZA, AltoPieza, AnchoPieza), tamanio(T, AltoT, AnchoT),
                          between(1, AnchoT, J), between(1, AltoT, I),
                          seccionTablero(T, AltoPieza, AnchoPieza, (I,J), PIEZA).
+
+
+
+% ubicarPiezas(+Tablero, +Poda, +Identificadores) lista todas las posibles opciones de ubicar todas las piezas mencionadas en Identificadores.
+ubicarPiezas(_, _, []).
+ubicarPiezas(T, P, [Ihead | Itail]) :- ubicarPieza(T, Ihead), ubicarPiezas(T, P, Itail).
+
+% poda(+Poda, +Tablero) es verdadero si el tablero satisface la poda.
+poda(sinPoda, _).
