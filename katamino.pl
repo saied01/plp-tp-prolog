@@ -113,8 +113,8 @@ llenarTablero(P, Cols, T) :-
     ubicarPiezas(T, P, Piezas).
 
 
-% cantSoluciones(+Poda, +Columnas, -N) es verdadero cuando N es igual a la cantidad total de soluciones posibles
-% que hay para un tablero con dada la cantidad de columnas.
+% cantSoluciones(+Poda, +Columnas, -N) es verdadero cuando N es igual a la cantidad de soluciones posibles
+% para un tablero con 'Columnas' columnas.
 cantSoluciones(Poda, Columnas, N) :-
     findall(T, llenarTablero(Poda, Columnas, T), TS),
     length(TS, N).
