@@ -7,6 +7,13 @@ sublista(Descartar,Tomar,L,R) :-
     length(R, Tomar), 
     append(Pref,Suf,L), 
     append(R,_,Suf).
+
+% El predicado sublista es reversible para 'R' (ultimo argumento) pero NO lo es para 'Descartar' (primer argumento).
+% Si hacemos un llamado por ejemplo: sublista(N,3,[a,b,c,d,e,f],[c,d,e]). El predicado devuelve N=2, que es correcto
+% ya que se necesitan descartar dos elementos para que sea verdadero que [c,d,e] es la sublista correcta.
+% Pero luego si le pedimos mas valores se cuelga, esto ocurre ya que length no es reversible en el primer argumento.
+% Entonces lo que ocurre es que ength sigue probando nuevos valores de N para el largo de la lista no instanciada,
+% pero como no hay ningun valor valido, sigue aumentando N infinitamente y se cuelga.
     
 
 % fila_vacia(+K, -Fila): generar una sola fila de K variables no instanciadas distintas.
@@ -16,7 +23,7 @@ fila_vacia(K, [_|R]) :-
     K1 is K - 1,
     fila_vacia(K1, R).
 
-% tablero(+K, -T): generar matriz de 5 filas y K columnas, vacias (variables no instanciadas).
+% tablero(+K, -T): generar la matriz repitiendo las K columnas 5 veces, vacias (variables no instanciadas).
 tablero(K, T) :- 
     K > 0,
     fila_vacia(K, F1),
@@ -41,16 +48,8 @@ contarColumnas([Mh|Mt],C) :- length(Mh, C), contarColumnas(Mt, C).
 coordenadas(T, IJ) :-
     IJ = (I,J),
     tamanio(T, F, C),
-    entre(I, 1, F),
-    entre(J, 1, C).
-
-% entre(?N, +I, +J) es verdadero si N es un numero entre I y J (se pide I menor o igual a J).
-entre(I, I, J) :- I =< J.
-entre(N, I, J) :- 
-    I < J,
-    I1 is I + 1,
-    entre(N, I1, J).
-
+    between(1, F, I),
+    between(1, C, J).
 
 
 % kPiezas(+K, -PS) debe ser verdadero cuando PS es una lista de longitud K de identificadores de piezas.
@@ -70,7 +69,7 @@ elegirK(K, [_ | KT], PS) :-
     elegirK(K, KT, PS).
 
 
-%seccionTablero(+T, +ALTO, +ANCHO, +IJ, ?ST)
+% seccionTablero(+T, +ALTO, +ANCHO, +IJ, ?ST)
 seccionTablero(T, ALTO, ANCHO, (I, J), ST) :- Iindex is I-1, Jindex is J-1, 
                                               sublista(Iindex, ALTO, T, RecorteALTO), 
                                               recorteDeListas(Jindex, ANCHO, RecorteALTO, ST).
@@ -118,3 +117,14 @@ cantSoluciones(Poda, Columnas, N) :-
 % % 817,021,495 inferences, 45.270 CPU in 45.271 seconds (100% CPU, 18047606 Lips)
 % N = 200.
 % No probamos con K = 5 ya que sin poda tardaria mucho tiempo.
+
+
+poda(sinPoda, _).
+poda(podaMod5, T) :- todosGruposLibresModulo5(T).
+todosGruposLibresModulo5(T) :- 
+    findall((I,J), 
+    (coordenadas(T, (I,J)), 
+    libre(T, (I,J))), Lista),
+    agrupar(CoordLibres, Grupos),
+    maplist(length, Grupos, Largos),
+    maplist(modulo5, Largos).
