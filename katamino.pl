@@ -7,8 +7,7 @@ sublista(Descartar,Tomar,L,R) :-
     length(R, Tomar), 
     append(Pref,Suf,L), 
     append(R,_,Suf).
-
-
+    
 
 % fila_vacia(+K, -Fila): generar una sola fila de K variables no instanciadas distintas.
 fila_vacia(0, []).
@@ -106,3 +105,16 @@ llenarTablero(P, Cols, T) :-
     tablero(Cols, T), 
     kPiezas(Cols, Piezas), 
     ubicarPiezas(T, P, Piezas).
+
+
+cantSoluciones(Poda, Columnas, N) :-
+    findall(T, llenarTablero(Poda, Columnas, T), TS),
+    length(TS, N).
+
+% Para K = 3:
+% % 21,958,525 inferences, 1.222 CPU in 1.222 seconds (100% CPU, 17963441 Lips)
+% N = 28.
+% Para K = 4:
+% % 817,021,495 inferences, 45.270 CPU in 45.271 seconds (100% CPU, 18047606 Lips)
+% N = 200.
+% No probamos con K = 5 ya que sin poda tardaria mucho tiempo.
