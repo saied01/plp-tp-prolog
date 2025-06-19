@@ -37,9 +37,8 @@ contarColumnas([Mh|Mt],C) :- length(Mh, C), contarColumnas(Mt, C).
 
 
 
-% coordenadas(+T, -IJ) debe ser verdadero para todo par IJ que sea una coordenada de elementos del tablero.
-coordenadas(T, IJ) :-
-    IJ = (I,J),
+% coordenadas(+T, -(I,J)) debe ser verdadero para todo par IJ que sea una coordenada de elementos del tablero.
+coordenadas(T, (I,J)) :- 
     tamanio(T, F, C),
     entre(I, 1, F),
     entre(J, 1, C).
@@ -118,3 +117,44 @@ cantSoluciones(Poda, Columnas, N) :-
 % % 817,021,495 inferences, 45.270 CPU in 45.271 seconds (100% CPU, 18047606 Lips)
 % N = 200.
 % No probamos con K = 5 ya que sin poda tardaria mucho tiempo.
+
+
+%elementoEnCoordenada(+T, +Coordenadas, ?-Elem).
+% Caso base:
+elementoEnCoordenada([[Elem|_]|_], (1,1), Elem).
+
+
+elementoEnCoordenada([[_|RestoFila]|RestoFilas], (1,Col), Elem) :-
+    Col > 1,
+    Col1 is Col - 1,
+    elementoEnCoordenada([RestoFila|RestoFilas], (1,Col1), Elem).
+
+
+elementoEnCoordenada([_|RestoFilas], (Fila,Col), Elem) :-
+    Fila > 1,
+    Fila1 is Fila - 1,
+    elementoEnCoordenada(RestoFilas, (Fila1,Col), Elem).
+
+
+
+noEstaInstanciado(Elemento) :- var(Elemento).
+
+
+casillerosLibres(T, GruposDeCLibres) :-  
+    findall((I, J),
+        (
+            coordenadas(T, (I,J)),
+            elementoEnCoordenada(T, (I, J), E),
+            var(E)
+        ),
+        GruposDeCLibres
+    ).
+
+listaEsMultiploDe5([]).
+listaEsMultiploDe5([Head|Tail]) :-
+    length(Head, Length),
+    0 is Length mod 5,
+    listaEsMultiploDe5(Tail).
+
+ 
+todosSonMultiplosDe5(GruposDeCLibres):- agrupar(GruposDeCLibres, Agrupados), listaEsMultiploDe5(Agrupados).
